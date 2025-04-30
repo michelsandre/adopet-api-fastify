@@ -1,15 +1,14 @@
-import { FastifyPluginAsync } from 'fastify';
-
 import { z } from 'zod';
 import { TutorService } from './tutor-service';
 import { TutorController } from './tutor-controller';
 import { tutorSchema } from './schemas/tutor-schema';
 import { tutorCreateSchema } from './schemas/tutor-create-schema';
+import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 
 const tutorService = new TutorService();
 const tutorController = new TutorController(tutorService);
 
-const tutores: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
+const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
   fastify.get('/', { schema: { response: { 200: z.array(tutorSchema) } } }, (req, reply) => {
     tutorController.getAll(req, reply);
   });

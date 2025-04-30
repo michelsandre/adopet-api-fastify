@@ -16,7 +16,7 @@ export class TutorController implements IController {
   }
   create(req: FastifyRequest, reply: FastifyReply): void {
     const data = req.body as ITutorCreate;
-    reply.send(this.service.create(data));
+    reply.status(201).send(this.service.create(data));
   }
   update(req: FastifyRequest, reply: FastifyReply): void {
     throw new Error('Method not implemented.');
