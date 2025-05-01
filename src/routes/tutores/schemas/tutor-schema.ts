@@ -11,4 +11,4 @@ export const TutorSchema = z.object({
   sobre: z.string().optional().nullable(),
 });
 
-export type ITutor = z.infer<typeof TutorSchema>;
+export type TTutor = z.infer<typeof TutorSchema>;

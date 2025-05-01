@@ -1,21 +1,21 @@
-import { TutorService } from './tutor.service';
-import { TutorController } from './tutor.controller';
-import { TutorSchema } from './schemas/tutor-schema';
-import { TutorCreateSchema } from './schemas/tutor-create-schema';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
-import { PrismaClient } from '../../../generated/prisma';
 import { FastifyRequest } from 'fastify';
 import { ParamIdSchema } from '../../shared/param-id-schema';
-import { TutorUpdateSchema } from './schemas/tutor-update-schema';
+import { AbrigoSchema } from './schemas/abrigo-schema';
+import { AbrigoCreateSchema } from './schemas/abrigo-create-schema';
 import { z } from 'zod';
+import { AbrigoUpdateSchema } from './schemas/abrigo-update-schema';
+import { AbrigoService } from './abrigo.service';
+import { PrismaClient } from '../../../generated/prisma';
+import { AbrigoController } from './abrigo.controller';
 
 const prismaService = new PrismaClient();
-const tutorService = new TutorService(prismaService);
-const tutorController = new TutorController(tutorService);
+const abrigoService = new AbrigoService(prismaService);
+const abrigoController = new AbrigoController(abrigoService);
 
-const routeTag = ['Tutores'];
+const routeTag = ['Abrigos'];
 
-const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
+const abrigos: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
   fastify.get(
     '/',
     {
@@ -23,12 +23,12 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         summary: 'Pesquisar todos',
         tags: routeTag,
         response: {
-          200: TutorSchema.omit({ senha: true }).array(),
+          200: AbrigoSchema.array(),
         },
       },
     },
     (req, reply) => {
-      tutorController.getAll(req, reply);
+      abrigoController.getAll(req, reply);
     }
   );
 
@@ -40,12 +40,12 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         tags: routeTag,
         params: ParamIdSchema,
         response: {
-          200: TutorSchema.omit({ senha: true }),
+          200: AbrigoSchema,
         },
       },
     },
     (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      tutorController.getById(req, reply);
+      abrigoController.getById(req, reply);
     }
   );
 
@@ -55,13 +55,15 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
       schema: {
         summary: 'Criar registro',
         tags: routeTag,
-        body: TutorCreateSchema,
+        body: AbrigoCreateSchema,
         response: {
-          201: TutorSchema,
+          201: AbrigoSchema,
         },
       },
     },
-    (req, reply) => tutorController.create(req, reply)
+    (req, reply) => {
+      abrigoController.create(req, reply);
+    }
   );
 
   fastify.patch(
@@ -71,14 +73,14 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         summary: 'Editar registro',
         tags: routeTag,
         params: ParamIdSchema,
-        body: TutorUpdateSchema,
+        body: AbrigoUpdateSchema,
         response: {
-          200: TutorSchema.omit({ senha: true }),
+          200: AbrigoSchema,
         },
       },
     },
     (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      tutorController.update(req, reply);
+      abrigoController.update(req, reply);
     }
   );
   fastify.delete(
@@ -96,9 +98,9 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
       },
     },
     (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      tutorController.delete(req, reply);
+      abrigoController.delete(req, reply);
     }
   );
 };
 
-export default tutores;
+export default abrigos;

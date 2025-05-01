@@ -30,12 +30,23 @@ const app: FastifyPluginAsync<AppOptions> = async (
     openapi: {
       info: {
         title: 'Adopet API',
-        description: 'Desafio Alura Challenge Backend 6 ed - Adoptet',
+        description: 'Desafio Alura Challenge Backend 6 ed - Adopet',
         version: '1.0.0',
+        contact: {
+          name: 'André Michels',
+          url: 'https://github.com/michelsandre',
+        },
       },
       servers: [],
     },
     transform: jsonSchemaTransform,
+    // transformObject: createJsonSchemaTransformObject({
+    //   schemas: {
+    //     TutorSchema: TutorSchema.omit({ senha: true }),
+    //     TutorCreateSchema: TutorCreateSchema,
+    //     TutorUpdateSchema: TutorUpdateSchema,
+    //   },
+    // }),
   });
 
   fastify.register(fastifySwaggerUi, {
@@ -43,9 +54,6 @@ const app: FastifyPluginAsync<AppOptions> = async (
     theme: {
       title: 'Adopet API',
     },
-    // uiConfig: {
-    //   layout: 'BaseLayout',
-    // },
   });
   // Do not touch the following lines
 

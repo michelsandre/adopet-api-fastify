@@ -10,4 +10,4 @@ export const TutorCreateSchema = z.object({
   sobre: z.string().optional().nullable().default(''),
 });
 
-export type ITutorCreate = z.infer<typeof TutorCreateSchema>;
+export type TTutorCreate = z.infer<typeof TutorCreateSchema>;

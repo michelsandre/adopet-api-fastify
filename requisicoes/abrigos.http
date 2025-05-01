@@ -1,0 +1,26 @@
+@apiUrl= http://localhost:8080/abrigos
+
+### GET /abrigos
+GET {{apiUrl}}/
+
+### GET /abrigos/:id
+GET {{apiUrl}}/5
+
+### POST /abrigos
+POST {{apiUrl}}/
+Content-Type: application/json
+
+{
+    "nome": "Abrigo AnimalMundi"
+}
+
+### PATCH /abrigos/:id [Todos os campos opc]
+PATCH {{apiUrl}}/7
+Content-Type: application/json
+
+{
+    "nome": "Centro Auquemia"
+}
+
+### DELETE /abrigos/:id
+DELETE {{apiUrl}}/7

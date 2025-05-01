@@ -12,11 +12,40 @@ datasource db {
 }
 
 model Tutor {
-  id       Int     @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   nome     String
-  email    String  @unique
+  email    String   @unique
   senha    String
   telefone String?
   cidade   String?
   sobre    String?
+  adocoes  Adocao[]
+}
+
+model Pet {
+  id        Int     @id @default(autoincrement())
+  nome      String
+  descricao String
+  adotado   Boolean @default(false)
+  idade     String
+  endereco  String
+  imagem    String
+  adocao    Adocao?
+  abrigo    Abrigo? @relation(fields: [abrigoId], references: [id])
+  abrigoId  Int?
+}
+
+model Abrigo {
+  id   Int    @id @default(autoincrement())
+  nome String
+  pets Pet[]
+}
+
+model Adocao {
+  id      String   @id @default(uuid())
+  data    DateTime @default(now())
+  pet     Pet      @relation(fields: [petId], references: [id])
+  petId   Int      @unique
+  tutor   Tutor    @relation(fields: [tutorId], references: [id])
+  tutorId Int
 }

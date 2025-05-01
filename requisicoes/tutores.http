@@ -1,0 +1,44 @@
+@apiUrl= http://localhost:8080/tutores
+
+### GET /tutores
+GET {{apiUrl}}/
+
+### GET /tutores/:id
+GET {{apiUrl}}/5
+
+### POST /tutores
+POST {{apiUrl}}/
+Content-Type: application/json
+
+{
+    "nome": "Lucas Santos",
+    "email": "mitor@santos.com",
+    "senha": "123456", 
+    "telefone": "47999457882",
+    "cidade": "São Paulo",
+    "sobre": "Sobre mim"
+}
+
+### POST /tutores sem os campos opcionais
+POST {{apiUrl}}/
+Content-Type: application/json
+
+{
+    "nome": "Vitor Lucas",
+    "email": "vitorluca@santos.com",
+    "senha": "123456"
+}
+
+### PATCH /tutores/:id [Todos os campos opc]
+PATCH {{apiUrl}}/1
+Content-Type: application/json
+
+{
+    "nome": "Mauro Santos",
+    "telefone": "48999784665",
+    "cidade": "Belém",
+    "sobre": "Sobre mim atualizado"
+}
+
+### DELETE /tutores/:id
+DELETE {{apiUrl}}/7
