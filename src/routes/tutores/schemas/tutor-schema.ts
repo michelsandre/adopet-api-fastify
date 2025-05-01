@@ -1,14 +1,14 @@
 import { z } from 'zod';
 
-export const tutorSchema = z.object({
+export const TutorSchema = z.object({
   id: z.number().int(),
   nome: z.string(),
   email: z.string(),
   senha: z.string(),
 
-  telefone: z.string().optional(),
-  cidade: z.string().optional(),
-  sobre: z.string().optional(),
+  telefone: z.string().optional().nullable(),
+  cidade: z.string().optional().nullable(),
+  sobre: z.string().optional().nullable(),
 });
 
-export type ITutor = z.infer<typeof tutorSchema>;
+export type ITutor = z.infer<typeof TutorSchema>;

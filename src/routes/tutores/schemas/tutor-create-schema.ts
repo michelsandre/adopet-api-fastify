@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-export const tutorCreateSchema = z.object({
-  nome: z.string(),
+export const TutorCreateSchema = z.object({
+  nome: z.string().min(1),
   email: z.string().email(),
-  senha: z.string(),
+  senha: z.string().min(6),
 
-  telefone: z.string().optional(),
-  cidade: z.string().optional(),
-  sobre: z.string().optional(),
+  telefone: z.string().optional().nullable().default(''),
+  cidade: z.string().optional().nullable().default(''),
+  sobre: z.string().optional().nullable().default(''),
 });
 
-export type ITutorCreate = z.infer<typeof tutorCreateSchema>;
+export type ITutorCreate = z.infer<typeof TutorCreateSchema>;

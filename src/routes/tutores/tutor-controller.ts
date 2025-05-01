@@ -2,26 +2,42 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { IController } from '../../interfaces/controller.interface';
 import { IService } from '../../interfaces/service.interface';
 import { ITutorCreate } from './schemas/tutor-create-schema';
+import { hashPassword } from '../../utils/hash-password';
 
 export class TutorController implements IController {
   constructor(private readonly service: IService) {
     this.service = service;
   }
 
-  getAll(req: FastifyRequest, reply: FastifyReply): void {
-    reply.send(this.service.getAll());
+  async getAll(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+    const users = await this.service.getAll();
+    reply.status(200).send(users);
   }
-  getById(req: FastifyRequest, reply: FastifyReply): void {
-    throw new Error('Method not implemented.');
+  async getById(
+    req: FastifyRequest<{ Params: { id: string } }>,
+    reply: FastifyReply
+  ): Promise<void> {
+    const id = req.params.id;
+
+    try {
+      const user = await this.service.getById(+id);
+      reply.status(200).send(user);
+    } catch (error) {
+      if (error instanceof Error) reply.notFound(error.message);
+    }
   }
-  create(req: FastifyRequest, reply: FastifyReply): void {
+  async create(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     const data = req.body as ITutorCreate;
-    reply.status(201).send(this.service.create(data));
+    const senhaHash = await hashPassword(data.senha);
+
+    reply
+      .status(201)
+      .send(await this.service.create({ ...data, senha: senhaHash }));
   }
-  update(req: FastifyRequest, reply: FastifyReply): void {
+  update(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  delete(req: FastifyRequest, reply: FastifyReply): void {
+  delete(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }
