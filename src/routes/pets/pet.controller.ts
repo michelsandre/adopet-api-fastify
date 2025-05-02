@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { IController } from '../../interfaces/controller.interface';
 import { IService } from '../../interfaces/service.interface';
+import { TPetCreate } from './schemas/pet-create-schema';
 
 export class PetController implements IController {
   constructor(private service: IService) {
@@ -20,8 +21,9 @@ export class PetController implements IController {
       if (error instanceof Error) reply.notFound(error.message);
     }
   }
-  create(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-    throw new Error('Method not implemented.');
+  async create(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+    const data = req.body as TPetCreate;
+    reply.status(201).send(await this.service.create(data));
   }
   update(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     throw new Error('Method not implemented.');

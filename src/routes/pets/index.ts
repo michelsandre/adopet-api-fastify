@@ -61,7 +61,9 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req, reply) => {}
+    (req, reply) => {
+      petController.create(req, reply);
+    }
   );
 
   fastify.patch(

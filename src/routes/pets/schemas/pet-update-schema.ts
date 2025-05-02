@@ -1,12 +1,6 @@
 import { z } from 'zod';
+import { PetCreateSchema } from './pet-create-schema';
 
-export const PetUpdateSchema = z.object({
-  nome: z.string().optional(),
-  descricao: z.string().optional(),
-  idade: z.string().optional(),
-  endereco: z.string().optional(),
-  imagem: z.string().url().optional(),
-  abrigoId: z.number().int().optional(),
-});
+export const PetUpdateSchema = PetCreateSchema.partial();
 
 export type TPetUpdate = z.infer<typeof PetUpdateSchema>;

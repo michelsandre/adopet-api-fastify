@@ -8,6 +8,7 @@ export const PetSchema = z.object({
   idade: z.string(),
   endereco: z.string(),
   imagem: z.string().url(),
+  abrigoId: z.number().int().nullable().optional(),
 });
 
 export type TPet = z.infer<typeof PetSchema>;

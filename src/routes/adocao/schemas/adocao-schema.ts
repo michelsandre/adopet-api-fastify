@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const AdocaoSchema = z.object({
   id: z.string(),
-  animal: z.number().int(),
-  tutor: z.number().int(),
+  petId: z.number().int(),
+  tutorId: z.number().int(),
   data: z.date(),
 });
 

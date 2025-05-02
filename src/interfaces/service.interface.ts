@@ -1,7 +1,7 @@
 export abstract class IService {
-  abstract getAll(): Promise<any>;
-  abstract getById(id: number | string): Promise<any>;
-  abstract create(data: any): Promise<any>;
-  abstract update(id: number | string, data: any): Promise<any>;
+  abstract getAll(): Promise<object[]>;
+  abstract getById(id: number | string): Promise<object>;
+  abstract create(data: object): Promise<object>;
+  abstract update(id: number | string, data: object): Promise<object>;
   abstract delete(id: number | string): Promise<any>;
 }
