@@ -5,6 +5,13 @@ import { z } from 'zod';
 import { PetSchema } from './schemas/pet-schema';
 import { PetCreateSchema } from './schemas/pet-create-schema';
 import { PetUpdateSchema } from './schemas/pet-update-schema';
+import { PrismaClient } from '../../../generated/prisma';
+import { PetService } from './pet.service';
+import { PetController } from './pet.controller';
+
+const prismaService = new PrismaClient();
+const petService = new PetService(prismaService);
+const petController = new PetController(petService);
 
 const routeTag = ['Pets'];
 
@@ -20,7 +27,9 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req, reply) => {}
+    (req, reply) => {
+      petController.getAll(req, reply);
+    }
   );
 
   fastify.get(
@@ -35,7 +44,9 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req: FastifyRequest<{ Params: { id: string } }>, reply) => {}
+    (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
+      petController.getById(req, reply);
+    }
   );
 
   fastify.post(

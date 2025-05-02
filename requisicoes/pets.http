@@ -1,0 +1,34 @@
+@apiUrl= http://localhost:8080/pets
+
+### GET /pets
+GET {{apiUrl}}/
+
+### GET /pets/:id
+GET {{apiUrl}}/1
+
+### POST /pets
+POST {{apiUrl}}/
+Content-Type: application/json
+
+{
+    "nome": "Tchucão",
+    "descricao": "Brincalão e bagunceiro",
+    "idade": "5 meses", 
+    "endereco": "Rua latido, 123 - Rio de Janeiro",
+    "imagem": "https://picsum.photos/200/300",
+}
+
+### PATCH /pets/:id [Todos os campos opc]
+PATCH {{apiUrl}}/1
+Content-Type: application/json
+
+{
+    "nome": "Tchucão",
+    "descricao": "Brincalão e bagunceiro",
+    "idade": "5 meses", 
+    "endereco": "Rua latido, 123 - Rio de Janeiro",
+    "imagem": "https://picsum.photos/200/300",
+}
+
+### DELETE /pets/:id
+DELETE {{apiUrl}}/1
