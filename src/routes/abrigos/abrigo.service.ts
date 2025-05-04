@@ -1,5 +1,6 @@
 import { PrismaClient } from '../../../generated/prisma';
 import { IService } from '../../interfaces/service.interface';
+import { CustomError } from '../../shared/custom-error';
 import { TAbrigoCreate } from './schemas/abrigo-create-schema';
 import { TAbrigo } from './schemas/abrigo-schema';
 import { TAbrigoUpdate } from './schemas/abrigo-update-schema';
@@ -10,21 +11,26 @@ export class AbrigoService implements IService {
   }
 
   private async findById(id: number): Promise<TAbrigo> {
-    const user = await this.prisma.abrigo.findUnique({ where: { id } });
-    if (!user) throw new Error('Abrigo não encontrado');
+    const abrigo = await this.prisma.abrigo.findUnique({ where: { id } });
+    if (!abrigo) throw new CustomError('Abrigo não encontrado', 404);
 
-    return user;
+    return abrigo;
   }
 
   async getAll(): Promise<TAbrigo[]> {
-    return await this.prisma.abrigo.findMany({
+    return await this.prisma.abrigo.findMany();
+  }
+
+  async getById(id: number): Promise<TAbrigo> {
+    const abrigo = await this.prisma.abrigo.findUnique({
+      where: { id },
       include: {
         pets: true,
       },
     });
-  }
-  async getById(id: number): Promise<TAbrigo> {
-    return await this.findById(id);
+    if (!abrigo) throw new CustomError('Abrigo não encontrado', 404);
+
+    return abrigo;
   }
   async create(data: TAbrigoCreate): Promise<TAbrigo> {
     return await this.prisma.abrigo.create({ data });

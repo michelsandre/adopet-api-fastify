@@ -4,7 +4,8 @@
 GET {{apiUrl}}/
 
 ### GET /pets/:id
-GET {{apiUrl}}/1
+@id:1 = 1
+GET {{apiUrl}}/{{id:1}}
 
 ### POST /pets
 POST {{apiUrl}}/
@@ -19,7 +20,8 @@ Content-Type: application/json
 }
 
 ### PATCH /pets/:id [Todos os campos opc]
-PATCH {{apiUrl}}/1
+@id:2=1
+PATCH {{apiUrl}}/{{id:2}}
 Content-Type: application/json
 
 {
@@ -31,4 +33,5 @@ Content-Type: application/json
 }
 
 ### DELETE /pets/:id
-DELETE {{apiUrl}}/1
+@id:3=1
+DELETE {{apiUrl}}/{{id:3}}

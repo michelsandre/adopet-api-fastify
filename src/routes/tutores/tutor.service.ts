@@ -1,5 +1,6 @@
 import { PrismaClient } from '../../../generated/prisma';
 import { IService } from '../../interfaces/service.interface';
+import { CustomError } from '../../shared/custom-error';
 import { TTutorCreate } from './schemas/tutor-create-schema';
 import { TTutor } from './schemas/tutor-schema';
 import { TTutorUpdate } from './schemas/tutor-update-schema';
@@ -11,7 +12,7 @@ export class TutorService implements IService {
 
   private async findById(id: number): Promise<TTutor> {
     const user = await this.prisma.tutor.findUnique({ where: { id } });
-    if (!user) throw new Error('Usuário não encontrado');
+    if (!user) throw new CustomError('Usuário não encontrado', 404);
 
     return user;
   }
@@ -20,7 +21,24 @@ export class TutorService implements IService {
     return await this.prisma.tutor.findMany();
   }
   async getById(id: number): Promise<TTutor> {
-    return await this.findById(id);
+    const user = await this.prisma.tutor.findUnique({
+      where: { id },
+      include: {
+        adocoes: {
+          omit: {
+            data: true,
+            id: true,
+            petId: true,
+            tutorId: true,
+          },
+          include: {
+            pet: true,
+          },
+        },
+      },
+    });
+    if (!user) throw new CustomError('Usuário não encontrado', 404);
+    return user;
   }
   async create(data: TTutorCreate): Promise<TTutor> {
     return await this.prisma.tutor.create({ data });

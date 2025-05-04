@@ -1,0 +1,19 @@
+@apiUrl= http://localhost:8080/adocao
+
+### GET /adocao
+GET {{apiUrl}}/
+
+
+### POST /adocao/:tutorId/:petId
+@tutorId=1
+@petId=1
+POST {{apiUrl}}/{{tutorId}}/{{petId}}
+Content-Type: application/json
+
+{
+}
+
+### DELETE /adocao/:id/:abrigoId
+@id=dd21d52a-1111-40a8-8b43-e1ead8dae3fc
+@abrigoId=5
+DELETE {{apiUrl}}/{{id}}/{{abrigoId}}

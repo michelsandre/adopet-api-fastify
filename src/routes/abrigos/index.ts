@@ -20,15 +20,15 @@ const abrigos: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     '/',
     {
       schema: {
-        summary: 'Pesquisar todos',
+        summary: 'Listar todos',
         tags: routeTag,
         response: {
-          200: AbrigoSchema.array(),
+          200: AbrigoSchema.omit({ pets: true }).array(),
         },
       },
     },
-    (req, reply) => {
-      abrigoController.getAll(req, reply);
+    async (req, reply) => {
+      await abrigoController.getAll(req, reply);
     }
   );
 
@@ -37,6 +37,7 @@ const abrigos: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     {
       schema: {
         summary: 'Pesquisar por id',
+        description: 'Apresenta o abrigo e os pets sob seus cuidados',
         tags: routeTag,
         params: ParamIdSchema,
         response: {
@@ -44,8 +45,8 @@ const abrigos: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      abrigoController.getById(req, reply);
+    async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
+      await abrigoController.getById(req, reply);
     }
   );
 
@@ -57,12 +58,12 @@ const abrigos: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         tags: routeTag,
         body: AbrigoCreateSchema,
         response: {
-          201: AbrigoSchema,
+          201: AbrigoSchema.omit({ pets: true }),
         },
       },
     },
-    (req, reply) => {
-      abrigoController.create(req, reply);
+    async (req, reply) => {
+      await abrigoController.create(req, reply);
     }
   );
 
@@ -75,12 +76,12 @@ const abrigos: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         params: ParamIdSchema,
         body: AbrigoUpdateSchema,
         response: {
-          200: AbrigoSchema,
+          200: AbrigoSchema.omit({ pets: true }),
         },
       },
     },
-    (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      abrigoController.update(req, reply);
+    async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
+      await abrigoController.update(req, reply);
     }
   );
   fastify.delete(
@@ -97,8 +98,8 @@ const abrigos: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      abrigoController.delete(req, reply);
+    async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
+      await abrigoController.delete(req, reply);
     }
   );
 };

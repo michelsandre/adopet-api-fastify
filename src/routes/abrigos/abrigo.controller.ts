@@ -18,12 +18,9 @@ export class AbrigoController implements IController {
     reply: FastifyReply
   ): Promise<void> {
     const id = req.params.id;
-    try {
-      const abrigo = await this.service.getById(+id);
-      reply.status(200).send(abrigo);
-    } catch (error) {
-      if (error instanceof Error) reply.notFound(error.message);
-    }
+
+    const abrigo = await this.service.getById(+id);
+    reply.status(200).send(abrigo);
   }
   async create(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     const data = req.body as TAbrigoCreate;
@@ -36,11 +33,8 @@ export class AbrigoController implements IController {
   ): Promise<void> {
     const id = req.params.id;
     const data = req.body as TAbrigoUpdate;
-    try {
-      reply.status(200).send(await this.service.update(+id, data));
-    } catch (error) {
-      if (error instanceof Error) reply.notFound(error.message);
-    }
+
+    reply.status(200).send(await this.service.update(+id, data));
   }
   async delete(
     req: FastifyRequest<{ Params: { id: string } }>,
@@ -48,10 +42,6 @@ export class AbrigoController implements IController {
   ): Promise<void> {
     const id = req.params.id;
 
-    try {
-      reply.status(200).send(await this.service.delete(+id));
-    } catch (error) {
-      if (error instanceof Error) reply.notFound(error.message);
-    }
+    reply.status(200).send(await this.service.delete(+id));
   }
 }

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const AbrigoCreateSchema = z.object({
-  nome: z.string(),
+  nome: z.string().nonempty(),
 });
 
 export type TAbrigoCreate = z.infer<typeof AbrigoCreateSchema>;

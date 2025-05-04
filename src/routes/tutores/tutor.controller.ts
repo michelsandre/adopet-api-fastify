@@ -20,12 +20,8 @@ export class TutorController implements IController {
   ): Promise<void> {
     const id = req.params.id;
 
-    try {
-      const user = await this.service.getById(+id);
-      reply.status(200).send(user);
-    } catch (error) {
-      if (error instanceof Error) reply.notFound(error.message);
-    }
+    const user = await this.service.getById(+id);
+    reply.status(200).send(user);
   }
   async create(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     const data = req.body as TTutorCreate;
@@ -42,21 +38,14 @@ export class TutorController implements IController {
     const id = req.params.id;
     const data = req.body as TTutorUpdate;
 
-    try {
-      reply.status(200).send(await this.service.update(+id, data));
-    } catch (error) {
-      if (error instanceof Error) reply.notFound(error.message);
-    }
+    reply.status(200).send(await this.service.update(+id, data));
   }
   async delete(
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply
   ): Promise<void> {
     const id = req.params.id;
-    try {
-      reply.status(200).send(await this.service.delete(+id));
-    } catch (error) {
-      if (error instanceof Error) reply.notFound(error.message);
-    }
+
+    reply.status(200).send(await this.service.delete(+id));
   }
 }

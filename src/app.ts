@@ -1,7 +1,8 @@
 import { join } from 'node:path';
 import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload';
-import { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
+import { FastifyServerOptions } from 'fastify';
 import {
+  FastifyPluginAsyncZod,
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
@@ -16,16 +17,29 @@ export interface AppOptions
 // Pass --options via CLI arguments in command to enable these options.
 const options: AppOptions = {};
 
-const app: FastifyPluginAsync<AppOptions> = async (
+const app: FastifyPluginAsyncZod<AppOptions> = async (
   fastify,
   opts
 ): Promise<void> => {
-  // Place here your custom code!
+  // ### Place here your custom code!
+
+  // Tratamento de erros globais
+  fastify.setErrorHandler((error, req, reply) => {
+    if (error.statusCode === 404) reply.notFound(error.message);
+    if (error.statusCode === 400) reply.badRequest(error.message);
+
+    reply.internalServerError(error.message);
+  });
+  ///
+
+  // Iniciarlizador do Zod
+
   fastify.setValidatorCompiler(validatorCompiler);
   fastify.setSerializerCompiler(serializerCompiler);
 
   fastify.withTypeProvider<ZodTypeProvider>();
 
+  // Fastify Swagger
   fastify.register(fastifySwagger, {
     openapi: {
       info: {
@@ -55,7 +69,8 @@ const app: FastifyPluginAsync<AppOptions> = async (
       title: 'Adopet API',
     },
   });
-  // Do not touch the following lines
+
+  // ### Do not touch the following lines
 
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused

@@ -27,8 +27,8 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req, reply) => {
-      tutorController.getAll(req, reply);
+    async (req, reply) => {
+      await tutorController.getAll(req, reply);
     }
   );
 
@@ -44,8 +44,8 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      tutorController.getById(req, reply);
+    async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
+      await tutorController.getById(req, reply);
     }
   );
 
@@ -61,7 +61,7 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req, reply) => tutorController.create(req, reply)
+    async (req, reply) => await tutorController.create(req, reply)
   );
 
   fastify.patch(
@@ -77,8 +77,8 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      tutorController.update(req, reply);
+    async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
+      await tutorController.update(req, reply);
     }
   );
   fastify.delete(
@@ -95,8 +95,8 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
-      tutorController.delete(req, reply);
+    async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
+      await tutorController.delete(req, reply);
     }
   );
 };
