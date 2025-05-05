@@ -46,10 +46,7 @@ const adocao: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    async (
-      req: FastifyRequest<{ Params: { tutorId: string; petId: string } }>,
-      reply
-    ) => {
+    async (req: FastifyRequest<{ Params: { tutorId: string; petId: string } }>, reply) => {
       await adocaoController.createAdocao(req, reply);
     }
   );
@@ -72,10 +69,8 @@ const adocao: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         },
       },
     },
-    async (
-      req: FastifyRequest<{ Params: { id: string; abrigoId: string } }>,
-      reply
-    ) => await adocaoController.delete(req, reply)
+    async (req: FastifyRequest<{ Params: { id: string; abrigoId: string } }>, reply) =>
+      await adocaoController.delete(req, reply)
   );
 };
 

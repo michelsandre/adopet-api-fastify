@@ -9,13 +9,13 @@ import { ParamIdSchema } from '../../shared/param-id-schema';
 import { TutorUpdateSchema } from './schemas/tutor-update-schema';
 import { z } from 'zod';
 
-const prismaService = new PrismaClient();
-const tutorService = new TutorService(prismaService);
-const tutorController = new TutorController(tutorService);
-
 const routeTag = ['Tutores'];
 
 const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
+  const prismaService = new PrismaClient();
+  const tutorService = new TutorService(prismaService, fastify);
+  const tutorController = new TutorController(tutorService);
+
   fastify.get(
     '/',
     {
@@ -26,9 +26,27 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
           200: TutorSchema.omit({ senha: true, adocoes: true }).array(),
         },
       },
+      preHandler: [fastify.authenticate],
     },
     async (req, reply) => {
       await tutorController.getAll(req, reply);
+    }
+  );
+
+  fastify.post(
+    '/login',
+    {
+      schema: {
+        summary: 'Autenticar',
+        body: z.object({
+          email: z.string(),
+          senha: z.string(),
+        }),
+        tags: routeTag,
+      },
+    },
+    async (req, reply) => {
+      await tutorController.login(req, reply);
     }
   );
 

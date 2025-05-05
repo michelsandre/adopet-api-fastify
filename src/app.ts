@@ -11,16 +11,11 @@ import {
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 
-export interface AppOptions
-  extends FastifyServerOptions,
-    Partial<AutoloadPluginOptions> {}
+export interface AppOptions extends FastifyServerOptions, Partial<AutoloadPluginOptions> {}
 // Pass --options via CLI arguments in command to enable these options.
 const options: AppOptions = {};
 
-const app: FastifyPluginAsyncZod<AppOptions> = async (
-  fastify,
-  opts
-): Promise<void> => {
+const app: FastifyPluginAsyncZod<AppOptions> = async (fastify, opts): Promise<void> => {
   // ### Place here your custom code!
 
   // Tratamento de erros globais
@@ -52,6 +47,20 @@ const app: FastifyPluginAsyncZod<AppOptions> = async (
         },
       },
       servers: [],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
     },
     transform: jsonSchemaTransform,
     // transformObject: createJsonSchemaTransformObject({

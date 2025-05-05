@@ -1,13 +1,16 @@
+import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '../../../generated/prisma';
 import { IService } from '../../interfaces/service.interface';
 import { CustomError } from '../../shared/custom-error';
+import { validatePassword } from '../../utils/hash-password';
 import { TTutorCreate } from './schemas/tutor-create-schema';
 import { TTutor } from './schemas/tutor-schema';
 import { TTutorUpdate } from './schemas/tutor-update-schema';
 
 export class TutorService implements IService {
-  constructor(private prisma: PrismaClient) {
+  constructor(private prisma: PrismaClient, private fastify: FastifyInstance) {
     this.prisma = prisma;
+    this.fastify = fastify;
   }
 
   private async findById(id: number): Promise<TTutor> {
@@ -53,5 +56,28 @@ export class TutorService implements IService {
     return {
       message: `Tutor [id: ${user.id}, nome: ${user.nome}] apagado com sucesso!`,
     };
+  }
+
+  async login(data: { email: string; senha: string }): Promise<any> {
+    const email = data.email;
+    const senha = data.senha;
+
+    const user = await this.prisma.tutor.findUnique({ where: { email } });
+    const senhaValida = await validatePassword(senha, user?.senha || '');
+
+    if (!user || !senhaValida) throw new CustomError('Email ou senha incorreto', 400);
+
+    const payload = this.fastify.jwt.sign(
+      {
+        id: user.id,
+        nome: user.nome,
+        email: user.email,
+      },
+      {
+        expiresIn: '30m',
+      }
+    );
+
+    return { accessToken: payload };
   }
 }
