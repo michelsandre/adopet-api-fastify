@@ -23,7 +23,7 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         summary: 'Pesquisar todos',
         tags: routeTag,
         response: {
-          200: TutorSchema.omit({ senha: true }).array(),
+          200: TutorSchema.omit({ senha: true, adocoes: true }).array(),
         },
       },
     },
@@ -57,7 +57,7 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         tags: routeTag,
         body: TutorCreateSchema,
         response: {
-          201: TutorSchema,
+          201: TutorSchema.omit({ adocoes: true }),
         },
       },
     },
@@ -73,7 +73,7 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
         params: ParamIdSchema,
         body: TutorUpdateSchema,
         response: {
-          200: TutorSchema.omit({ senha: true }),
+          200: TutorSchema.omit({ senha: true, adocoes: true }),
         },
       },
     },

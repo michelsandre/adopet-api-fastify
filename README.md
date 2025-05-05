@@ -1,21 +1,68 @@
+![em desenvolvimento](https://img.shields.io/badge/status-em_desenvolvimento-yellow?style=for-the-badge&logo=github)
+
 # 🐾 Adopet API - Fastify
 
 Bem-vindo à **Adopet API**, uma aplicação desenvolvida com [Fastify](https://fastify.dev/) para gerenciar adoções de pets. Este projeto foi criado como parte do desafio **Alura Challenge Backend 6ª edição**.
+
+## 📦 Instalação
+
+Siga os passos abaixo para configurar o projeto localmente:
+
+1. Clone o repositório:
+
+   ```bash
+   git clone https://github.com/michelsandre/adopet-api-fastify.git
+   cd adopet-api-fastify
+   ```
+
+2. Instale as dependências:
+
+   ```bash
+   npm install
+   ```
+
+3. Configure o banco de dados:
+
+   Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
+
+   ```bash
+   PORT=8080
+   DATABASE_URL="file:./db/dev.db"
+   ```
+
+4. Execute as migrações do Prisma para criar o banco de dados:
+
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. (Opcional) Popule o banco de dados com dados iniciais:
+
+   ```bash
+   npx prisma db seed
+   ```
+
+6. Inicie o servidor em modo de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+Abra [http://localhost:8080](http://localhost:8080) para acessar a API.
 
 ## 🚀 Scripts Disponíveis
 
 No diretório do projeto, você pode executar os seguintes comandos:
 
-### `npm run dev`
+#### `npm run dev`
 
 Inicia o aplicativo em modo de desenvolvimento.\
 Abra [http://localhost:8080](http://localhost:8080) para visualizar no navegador.
 
-### `npm start`
+#### `npm start`
 
 Inicia o aplicativo em modo de produção.
 
-### `npm run test`
+#### `npm run test`
 
 Executa os testes da aplicação.
 
@@ -34,7 +81,7 @@ Executa os testes da aplicação.
 
 ## 🌐 Endpoints
 
-### Tutores
+#### Tutores
 
 - **GET `/tutores`**: Retorna todos os tutores cadastrados.
 - **GET `/tutores/:id`**: Retorna os detalhes de um tutor específico pelo ID.
@@ -42,7 +89,7 @@ Executa os testes da aplicação.
 - **PATCH `/tutores/:id`**: Atualiza os dados de um tutor específico pelo ID.
 - **DELETE `/tutores/:id`**: Remove um tutor específico pelo ID.
 
-### Pets
+#### Pets
 
 - **GET `/pets`**: Retorna todos os pets disponíveis para adoção.
 - **GET `/pets/todos`**: Retorna todos os pets cadastrados, incluindo os já adotados.
@@ -52,7 +99,7 @@ Executa os testes da aplicação.
 - **PATCH `/pets/:petId/:abrigoId`**: Atribui um pet a um abrigo.
 - **DELETE `/pets/:id`**: Remove um pet específico pelo ID.
 
-### Abrigos
+#### Abrigos
 
 - **GET `/abrigos`**: Retorna todos os abrigos cadastrados.
 - **GET `/abrigos/:id`**: Retorna os detalhes de um abrigo específico pelo ID, incluindo os pets sob seus cuidados.
@@ -60,7 +107,7 @@ Executa os testes da aplicação.
 - **PATCH `/abrigos/:id`**: Atualiza os dados de um abrigo específico pelo ID.
 - **DELETE `/abrigos/:id`**: Remove um abrigo específico pelo ID.
 
-### Adoções
+#### Adoções
 
 - **GET `/adocao`**: Retorna todos os registros de adoção.
 - **POST `/adocao/:tutorId/:petId`**: Cria um registro de adoção, alterando o status do pet para `adotado: true`.
@@ -83,6 +130,15 @@ adopet-api-fastify/
 ├── package.json         # Configurações do projeto e dependências
 ├── tsconfig.json        # Configuração do TypeScript
 ├── README.md            # Documentação do projeto
+```
+
+Exemplo para o arquivo `.env`
+
+```bash
+# Define a porta que o servidor deverá inicializar
+PORT=8080
+# Define o endereço do banco de dados, no caso será SQLite. Se não existir, será criado.
+DATABASE_URL="file:./db/dev.db"
 ```
 
 ## 🧪 Testes de Requisição
