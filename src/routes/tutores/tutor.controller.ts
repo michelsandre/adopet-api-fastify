@@ -4,10 +4,13 @@ import { IController } from '../../interfaces/controller.interface';
 import { TTutorCreate } from './schemas/tutor-create-schema';
 import { hashPassword } from '../../utils/hash-password';
 import { TTutorUpdate } from './schemas/tutor-update-schema';
-import { TutorService } from './tutor.service';
+
+import { IService } from '../../interfaces/service.interface';
+import { ILogin } from '../../interfaces/login.interface';
+import { TLogin } from '../../shared/login-schema';
 
 export class TutorController implements IController {
-  constructor(private readonly service: TutorService) {
+  constructor(private readonly service: IService & ILogin) {
     this.service = service;
   }
 
@@ -28,7 +31,9 @@ export class TutorController implements IController {
     const data = req.body as TTutorCreate;
     const senhaHash = await hashPassword(data.senha);
 
-    reply.status(201).send(await this.service.create({ ...data, senha: senhaHash }));
+    reply
+      .status(201)
+      .send(await this.service.create({ ...data, senha: senhaHash }));
   }
   async update(
     req: FastifyRequest<{ Params: { id: string } }>,
@@ -48,8 +53,11 @@ export class TutorController implements IController {
     reply.status(200).send(await this.service.delete(+id));
   }
 
-  async login(req: FastifyRequest, reply: FastifyReply): Promise<any> {
-    const data = req.body as { email: string; senha: string };
+  async login(
+    req: FastifyRequest<{ Body: TLogin }>,
+    reply: FastifyReply
+  ): Promise<void> {
+    const data = req.body;
 
     reply.status(200).send(await this.service.login(data));
   }

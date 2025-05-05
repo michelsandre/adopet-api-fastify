@@ -8,6 +8,7 @@ import { FastifyRequest } from 'fastify';
 import { ParamIdSchema } from '../../shared/param-id-schema';
 import { TutorUpdateSchema } from './schemas/tutor-update-schema';
 import { z } from 'zod';
+import { LoginSchema, TLogin } from '../../shared/login-schema';
 
 const routeTag = ['Tutores'];
 
@@ -30,23 +31,6 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     },
     async (req, reply) => {
       await tutorController.getAll(req, reply);
-    }
-  );
-
-  fastify.post(
-    '/login',
-    {
-      schema: {
-        summary: 'Autenticar',
-        body: z.object({
-          email: z.string(),
-          senha: z.string(),
-        }),
-        tags: routeTag,
-      },
-    },
-    async (req, reply) => {
-      await tutorController.login(req, reply);
     }
   );
 
@@ -99,6 +83,7 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
       await tutorController.update(req, reply);
     }
   );
+
   fastify.delete(
     '/:id',
     {
@@ -115,6 +100,24 @@ const tutores: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     },
     async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
       await tutorController.delete(req, reply);
+    }
+  );
+  fastify.post(
+    '/login',
+    {
+      schema: {
+        summary: 'Realizar autenticação',
+        body: LoginSchema,
+        response: {
+          200: z.object({
+            accessToken: z.string(),
+          }),
+        },
+        tags: routeTag,
+      },
+    },
+    async (req: FastifyRequest<{ Body: TLogin }>, reply) => {
+      await tutorController.login(req, reply);
     }
   );
 };

@@ -6,8 +6,10 @@ import { validatePassword } from '../../utils/hash-password';
 import { TTutorCreate } from './schemas/tutor-create-schema';
 import { TTutor } from './schemas/tutor-schema';
 import { TTutorUpdate } from './schemas/tutor-update-schema';
+import { ILogin } from '../../interfaces/login.interface';
+import { TLogin } from '../../shared/login-schema';
 
-export class TutorService implements IService {
+export class TutorService implements IService, ILogin {
   constructor(private prisma: PrismaClient, private fastify: FastifyInstance) {
     this.prisma = prisma;
     this.fastify = fastify;
@@ -58,14 +60,14 @@ export class TutorService implements IService {
     };
   }
 
-  async login(data: { email: string; senha: string }): Promise<any> {
-    const email = data.email;
-    const senha = data.senha;
+  async login(data: TLogin): Promise<{ accessToken: string }> {
+    const { email, senha } = data;
 
     const user = await this.prisma.tutor.findUnique({ where: { email } });
     const senhaValida = await validatePassword(senha, user?.senha || '');
 
-    if (!user || !senhaValida) throw new CustomError('Email ou senha incorreto', 400);
+    if (!user || !senhaValida)
+      throw new CustomError('Email ou senha incorreto', 400);
 
     const payload = this.fastify.jwt.sign(
       {

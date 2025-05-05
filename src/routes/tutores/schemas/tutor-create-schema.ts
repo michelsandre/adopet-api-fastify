@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const TutorCreateSchema = z.object({
-  nome: z.string().min(1),
+  nome: z.string().nonempty(),
   email: z.string().email(),
   senha: z.string().min(6),
   telefone: z.string().optional().nullable().default(''),

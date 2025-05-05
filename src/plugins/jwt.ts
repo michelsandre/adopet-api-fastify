@@ -7,13 +7,12 @@ export default fp(async (fastify) => {
     secret: 'super-secreto',
   });
 
-  fastify.decorate('authenticate', async (req: FastifyRequest, reply: FastifyReply) => {
-    try {
+  fastify.decorate(
+    'authenticate',
+    async (req: FastifyRequest, reply: FastifyReply) => {
       await req.jwtVerify();
-    } catch (error) {
-      if (error instanceof Error) reply.internalServerError(error.message);
     }
-  });
+  );
 });
 
 declare module 'fastify' {
