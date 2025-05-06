@@ -6,9 +6,7 @@ import { TAbrigo } from './schemas/abrigo-schema';
 import { TAbrigoUpdate } from './schemas/abrigo-update-schema';
 
 export class AbrigoService implements IService {
-  constructor(private prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
+  constructor(private prisma: PrismaClient) {}
 
   private async findById(id: number): Promise<TAbrigo> {
     const abrigo = await this.prisma.abrigo.findUnique({ where: { id } });

@@ -5,9 +5,7 @@ import { TAbrigoCreate } from './schemas/abrigo-create-schema';
 import { TAbrigoUpdate } from './schemas/abrigo-update-schema';
 
 export class AbrigoController implements IController {
-  constructor(private readonly service: IService) {
-    this.service = service;
-  }
+  constructor(private readonly service: IService) {}
 
   async getAll(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     const abrigos = await this.service.getAll();

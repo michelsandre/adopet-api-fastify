@@ -7,6 +7,7 @@ import { AdocaoSchema } from './schemas/adocao-schema';
 
 import { z } from 'zod';
 import { ParamIdSchema } from '../../shared/param-id-schema';
+import { RolesEnum } from '../../enum/roles.enum';
 
 const prismaService = new PrismaClient();
 const adocaoService = new AdocaoService(prismaService);
@@ -51,16 +52,20 @@ const adocao: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     }
   );
   fastify.delete(
-    '/:id/:abrigoId',
+    '/:id',
     {
       schema: {
         summary: 'Apagar registro de adoção',
         description:
-          'Apenas o abrigo responsável pelo pet é quem pode cancelar uma adoção. O status do pet retornará para `adotado: false`. ',
+          'Apenas os abrigos podem cancelar uma adoção. O status do pet retornará para `adotado: false`. ',
         tags: routeTag,
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
         params: z.object({
           id: z.string(),
-          abrigoId: ParamIdSchema.shape.id,
         }),
         response: {
           200: z.object({
@@ -68,8 +73,9 @@ const adocao: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
           }),
         },
       },
+      preHandler: [fastify.authRole(RolesEnum.ABRIGO)],
     },
-    async (req: FastifyRequest<{ Params: { id: string; abrigoId: string } }>, reply) =>
+    async (req: FastifyRequest<{ Params: { id: string } }>, reply) =>
       await adocaoController.delete(req, reply)
   );
 };

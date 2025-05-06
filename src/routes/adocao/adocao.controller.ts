@@ -2,9 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { AdocaoService } from './adocao.service';
 
 export class AdocaoController {
-  constructor(private service: AdocaoService) {
-    this.service = service;
-  }
+  constructor(private service: AdocaoService) {}
 
   async getAll(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     reply.status(200).send(await this.service.getAll());
@@ -20,12 +18,11 @@ export class AdocaoController {
     reply.status(201).send(await this.service.createAdocao(+tutorId, +petId));
   }
   async delete(
-    req: FastifyRequest<{ Params: { id: string; abrigoId: string } }>,
+    req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply
   ): Promise<void> {
     const id = req.params.id;
-    const abrigoId = req.params.abrigoId;
 
-    reply.status(200).send(await this.service.delete(id, +abrigoId));
+    reply.status(200).send(await this.service.delete(id));
   }
 }

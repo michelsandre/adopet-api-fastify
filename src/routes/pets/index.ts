@@ -8,6 +8,7 @@ import { PetUpdateSchema } from './schemas/pet-update-schema';
 import { PrismaClient } from '../../../generated/prisma';
 import { PetService } from './pet.service';
 import { PetController } from './pet.controller';
+import { RolesEnum } from '../../enum/roles.enum';
 
 const prismaService = new PrismaClient();
 const petService = new PetService(prismaService);
@@ -21,12 +22,11 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     {
       schema: {
         summary: 'Pesquisar todos os pets disponíveis',
-        description:
-          'Pesquisa de pets não adotados e cadastrados em algum abrigo',
+        description: 'Pesquisa de pets não adotados e cadastrados em algum abrigo',
         tags: routeTag,
-        response: {
-          200: PetSchema.array(),
-        },
+        // response: {
+        //   200: PetSchema.array(),
+        // },
       },
     },
     async (req, reply) => {
@@ -106,20 +106,25 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     {
       schema: {
         summary: 'Atribuir um pet a um abrigo',
+        description: 'Apenas os abrigos podem executar esta função',
         tags: routeTag,
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
         params: z.object({
           petId: ParamIdSchema.shape.id,
           abrigoId: ParamIdSchema.shape.id,
         }),
+
         response: {
           200: PetSchema,
         },
       },
+      preHandler: [fastify.authRole(RolesEnum.ABRIGO)],
     },
-    async (
-      req: FastifyRequest<{ Params: { petId: string; abrigoId: string } }>,
-      reply
-    ) => {
+    async (req: FastifyRequest<{ Params: { petId: string; abrigoId: string } }>, reply) => {
       await petController.createRelation(req, reply);
     }
   );

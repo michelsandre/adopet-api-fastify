@@ -28,6 +28,7 @@ Siga os passos abaixo para configurar o projeto localmente:
    ```bash
    PORT=8080
    DATABASE_URL="file:./db/dev.db"
+   JWT_SECRET="sua-chave-secreta"
    ```
 
 4. Execute as migrações do Prisma para criar o banco de dados:
@@ -68,8 +69,8 @@ Executa os testes da aplicação.
 
 ## 📚 Estrutura do Projeto
 
-- **`src/routes`**: Contém as rotas da aplicação, organizadas por módulos como `tutores`, `pets`, `abrigos` e `adocao`.
-- **`src/plugins`**: Plugins globais para funcionalidades como validação e tratamento de erros.
+- **`src/routes`**: Contém as rotas da aplicação, organizadas por módulos como `tutores`, `pets`, `abrigos`. `adocao` e `login`.
+- **`src/plugins`**: Plugins globais para funcionalidades como autenticação, validação e tratamento de erros.
 - **`prisma`**: Configuração do banco de dados e scripts de seed.
 
 ## 🛠️ Tecnologias Utilizadas
@@ -78,6 +79,7 @@ Executa os testes da aplicação.
 - **Prisma**: ORM para manipulação do banco de dados.
 - **Zod**: Validação de esquemas de dados.
 - **TypeScript**: Tipagem estática para JavaScript.
+- **JWT**: Autenticação baseada em tokens.
 
 ## 🌐 Endpoints
 
@@ -111,7 +113,12 @@ Executa os testes da aplicação.
 
 - **GET `/adocao`**: Retorna todos os registros de adoção.
 - **POST `/adocao/:tutorId/:petId`**: Cria um registro de adoção, alterando o status do pet para `adotado: true`.
-- **DELETE `/adocao/:id/:abrigoId`**: Remove um registro de adoção, alterando o status do pet para `adotado: false`.
+- **DELETE `/adocao/:id`**: Remove um registro de adoção, alterando o status do pet para `adotado: false`.
+
+#### Login
+
+- **POST `/login/tutor`**: Realiza a autenticação de um tutor e retorna um token JWT.
+- **POST `/login/abrigo`**: Realiza a autenticação de um abrigo e retorna um token JWT.
 
 ## 📂 Estrutura de Arquivos
 
@@ -122,9 +129,11 @@ adopet-api-fastify/
 ├── src/
 │   ├── interfaces/      # Interfaces compartilhadas
 │   ├── plugins/         # Plugins globais do Fastify
-│   ├── routes/          # Rotas organizadas por módulos (tutores, pets, etc.)
-│   ├── shared/          # Utilitários e schemas compartilhados
+│   ├── routes/          # Rotas organizadas por módulos (tutores, pets, abrigos, etc.)
+│   ├── shared/          # Schemas e utilitários compartilhados
 │   ├── utils/           # Funções utilitárias
+│   ├── enum/            # Definições de enums
+│   ├── types/           # Tipos TypeScript
 │   ├── app.ts           # Configuração principal do Fastify
 ├── .env                 # Variáveis de ambiente
 ├── package.json         # Configurações do projeto e dependências
@@ -139,6 +148,7 @@ Exemplo para o arquivo `.env`
 PORT=8080
 # Define o endereço do banco de dados, no caso será SQLite. Se não existir, será criado.
 DATABASE_URL="file:./db/dev.db"
+
 ```
 
 ## 🧪 Testes de Requisição

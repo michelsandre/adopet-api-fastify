@@ -14,9 +14,7 @@ enum Model {
 }
 
 export class PetService implements IService, IRelation {
-  constructor(private prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
+  constructor(private prisma: PrismaClient) {}
 
   private async findById<T>(id: number, model: Model = Model.PET): Promise<T> {
     const item = await (this.prisma[model] as any).findUnique({
@@ -27,7 +25,7 @@ export class PetService implements IService, IRelation {
     return item;
   }
 
-  async getAll(all: boolean = false): Promise<object[]> {
+  async getAll(all: boolean = false): Promise<TPet[]> {
     const filterParams = {
       where: {
         adotado: false,

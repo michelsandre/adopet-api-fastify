@@ -1,14 +1,13 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { IController } from '../../interfaces/controller.interface';
-import { IService } from '../../interfaces/service.interface';
+
 import { TPetCreate } from './schemas/pet-create-schema';
 import { TPetUpdate } from './schemas/pet-update-schema';
 import { IRelation } from '../../interfaces/relation.inteface';
+import { PetService } from './pet.service';
 
 export class PetController implements IController {
-  constructor(private service: IService & IRelation) {
-    this.service = service;
-  }
+  constructor(private service: PetService & IRelation) {}
 
   async getAll(req: FastifyRequest, reply: FastifyReply): Promise<void> {
     reply.status(200).send(await this.service.getAll());
@@ -57,8 +56,6 @@ export class PetController implements IController {
     const petId = req.params.petId;
     const abrigoId = req.params.abrigoId;
 
-    reply
-      .status(200)
-      .send(await this.service.createRelation(+petId, +abrigoId));
+    reply.status(200).send(await this.service.createRelation(+petId, +abrigoId));
   }
 }

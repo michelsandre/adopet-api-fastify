@@ -1,7 +1,5 @@
 import { PrismaClient } from '../../../generated/prisma';
 import { CustomError } from '../../shared/custom-error';
-
-import { TAbrigo } from '../abrigos/schemas/abrigo-schema';
 import { TPet } from '../pets/schemas/pet-schema';
 import { TTutor } from '../tutores/schemas/tutor-schema';
 import { TAdocao } from './schemas/adocao-schema';
@@ -14,15 +12,9 @@ enum Model {
 }
 
 export class AdocaoService {
-  constructor(private prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
+  constructor(private prisma: PrismaClient) {}
 
-  private async findById<T>(
-    id: number | string,
-    model: Model,
-    filterParams?: object
-  ): Promise<T> {
+  private async findById<T>(id: number | string, model: Model, filterParams?: object): Promise<T> {
     const item = await (this.prisma[model] as any).findUnique({
       where: { id },
       include: filterParams,
@@ -41,8 +33,7 @@ export class AdocaoService {
     const tutor = await this.findById<TTutor>(tutorId, Model.TUTOR);
     const pet = await this.findById<TPet>(petId, Model.PET);
 
-    if (pet.adotado)
-      throw new CustomError('Pet não disponível para adoção', 400);
+    if (pet.adotado) throw new CustomError('Pet não disponível para adoção', 400);
 
     const [adocaoResponse, _] = await this.prisma.$transaction([
       this.prisma.adocao.create({
@@ -61,25 +52,15 @@ export class AdocaoService {
     return adocaoResponse;
   }
 
-  async delete(id: string, abrigoId: number): Promise<{ message: string }> {
+  async delete(id: string): Promise<{ message: string }> {
     const adocao = await this.findById<TAdocao>(id, Model.ADOCAO, {
       pet: true,
     });
-    const abrigo = await this.findById<TAbrigo>(abrigoId, Model.ABRIGO);
-
-    if (abrigoId !== adocao.pet?.abrigoId)
-      throw new CustomError(
-        'Abrigo solicitante não é o responsável pelo pet',
-        400
-      );
 
     await this.prisma.$transaction([
       this.prisma.adocao.delete({
         where: {
           id: adocao.id,
-          pet: {
-            abrigoId: abrigo.id,
-          },
         },
       }),
 
