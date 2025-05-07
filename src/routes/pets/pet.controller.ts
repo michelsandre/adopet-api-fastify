@@ -9,11 +9,13 @@ import { PetService } from './pet.service';
 export class PetController implements IController {
   constructor(private service: PetService & IRelation) {}
 
-  async getAll(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-    reply.status(200).send(await this.service.getAll());
-  }
-  async getAllData(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-    reply.status(200).send(await this.service.getAll(true));
+  async getAll(
+    req: FastifyRequest<{ Querystring: { page?: string } }>,
+    reply: FastifyReply
+  ): Promise<void> {
+    const page = req.query.page;
+
+    reply.status(200).send(await this.service.getAll(page ? +page : undefined));
   }
 
   async getById(

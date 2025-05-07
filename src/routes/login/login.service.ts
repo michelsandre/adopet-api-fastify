@@ -24,7 +24,7 @@ export class LoginService {
         role: admin ? RolesEnum.ABRIGO : RolesEnum.TUTOR,
       },
       {
-        expiresIn: '10m',
+        expiresIn: this.fastify.config.EXPIRES_IN,
       }
     );
 

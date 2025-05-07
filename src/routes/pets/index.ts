@@ -9,6 +9,7 @@ import { PrismaClient } from '../../../generated/prisma';
 import { PetService } from './pet.service';
 import { PetController } from './pet.controller';
 import { RolesEnum } from '../../enum/roles.enum';
+import { PetPaginationSchema } from './schemas/pet-pagination-schema';
 
 const prismaService = new PrismaClient();
 const petService = new PetService(prismaService);
@@ -22,32 +23,20 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     {
       schema: {
         summary: 'Pesquisar todos os pets disponíveis',
-        description:
-          'Pesquisa de pets não adotados e cadastrados em algum abrigo',
+        querystring: z.object({
+          page: z
+            .string()
+            .optional()
+            .describe('Quando informado, será apresentado 5 resultados por página'),
+        }),
         tags: routeTag,
         response: {
-          200: PetSchema.array(),
+          200: z.union([PetSchema.array(), PetPaginationSchema]),
         },
       },
     },
-    async (req, reply) => {
+    async (req: FastifyRequest<{ Querystring: { page?: string } }>, reply) => {
       await petController.getAll(req, reply);
-    }
-  );
-  fastify.get(
-    '/todos',
-    {
-      schema: {
-        summary: 'Pesquisar os registros de pets',
-        description: 'Pesquisa de todos os pets',
-        tags: routeTag,
-        response: {
-          200: PetSchema.array(),
-        },
-      },
-    },
-    async (req, reply) => {
-      await petController.getAllData(req, reply);
     }
   );
 
@@ -125,10 +114,7 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
       },
       preHandler: [fastify.authRole(RolesEnum.ABRIGO)],
     },
-    async (
-      req: FastifyRequest<{ Params: { petId: string; abrigoId: string } }>,
-      reply
-    ) => {
+    async (req: FastifyRequest<{ Params: { petId: string; abrigoId: string } }>, reply) => {
       await petController.createRelation(req, reply);
     }
   );

@@ -1,4 +1,4 @@
-![em desenvolvimento](https://img.shields.io/badge/status-em_desenvolvimento-yellow?style=for-the-badge&logo=github)
+![em desenvolvimento](https://img.shields.io/badge/status-finalizado-green?style=for-the-badge&logo=github)
 
 # 🐾 Adopet API - Fastify
 
@@ -29,12 +29,13 @@ Siga os passos abaixo para configurar o projeto localmente:
    PORT=8080
    DATABASE_URL="file:./db/dev.db"
    JWT_SECRET="sua-chave-secreta"
+   EXPIRES_IN='10m'
    ```
 
 4. Execute as migrações do Prisma para criar o banco de dados:
 
    ```bash
-   npx prisma migrate dev
+   npx prisma migrate dev --name init
    ```
 
 5. (Opcional) Popule o banco de dados com dados iniciais:
@@ -93,8 +94,7 @@ Executa os testes da aplicação.
 
 #### Pets
 
-- **GET `/pets`**: Retorna todos os pets disponíveis para adoção.
-- **GET `/pets/todos`**: Retorna todos os pets cadastrados, incluindo os já adotados.
+- **GET `/pets`**: Retorna todos os pets disponíveis para adoção. Também permite busca paginada, ex: `/pets?page=1`.
 - **GET `/pets/:id`**: Retorna os detalhes de um pet específico pelo ID.
 - **POST `/pets`**: Cria um novo registro de pet. Campos obrigatórios: `nome`, `descricao`, `idade`, `endereco`, `imagem`.
 - **PATCH `/pets/:id`**: Atualiza os dados de um pet específico pelo ID.
@@ -127,13 +127,13 @@ adopet-api-fastify/
 ├── prisma/              # Configuração e seed do banco de dados
 ├── requisicoes/         # Exemplos de requisições HTTP
 ├── src/
+│   ├── enum/            # Definições de enums
 │   ├── interfaces/      # Interfaces compartilhadas
 │   ├── plugins/         # Plugins globais do Fastify
 │   ├── routes/          # Rotas organizadas por módulos (tutores, pets, abrigos, etc.)
 │   ├── shared/          # Schemas e utilitários compartilhados
-│   ├── utils/           # Funções utilitárias
-│   ├── enum/            # Definições de enums
 │   ├── types/           # Tipos TypeScript
+│   ├── utils/           # Funções utilitárias
 │   ├── app.ts           # Configuração principal do Fastify
 ├── .env                 # Variáveis de ambiente
 ├── package.json         # Configurações do projeto e dependências
@@ -148,6 +148,11 @@ Exemplo para o arquivo `.env`
 PORT=8080
 # Define o endereço do banco de dados, no caso será SQLite. Se não existir, será criado.
 DATABASE_URL="file:./db/dev.db"
+# Chave secreta para geração e validação do token
+# Pode ser gerada através https://randomkeygen.com/
+JWT_SECRET="sua-chave-secreta"
+# Define a validade do token
+EXPIRES_IN='10m'
 
 ```
 

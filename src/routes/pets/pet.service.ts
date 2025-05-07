@@ -4,6 +4,7 @@ import { IService } from '../../interfaces/service.interface';
 import { CustomError } from '../../shared/custom-error';
 import { TAbrigo } from '../abrigos/schemas/abrigo-schema';
 import { TPetCreate } from './schemas/pet-create-schema';
+import { TPetPagination } from './schemas/pet-pagination-schema';
 
 import { TPet } from './schemas/pet-schema';
 import { TPetUpdate } from './schemas/pet-update-schema';
@@ -25,14 +26,21 @@ export class PetService implements IService, IRelation {
     return item;
   }
 
-  async getAll(all: boolean = false): Promise<TPet[]> {
-    const filterParams = {
-      where: {
-        adotado: false,
-        abrigoId: { not: null },
-      },
-    };
-    return await this.prisma.pet.findMany(all ? undefined : filterParams);
+  async getAll(page?: number): Promise<TPet[] | TPetPagination> {
+    const resultsPerPage = 5;
+    const records = await this.prisma.pet.count();
+    const numPages = Math.ceil(records / resultsPerPage);
+
+    if (page) {
+      const pets = await this.prisma.pet.findMany({
+        skip: (page - 1) * resultsPerPage,
+        take: resultsPerPage,
+      });
+
+      return { pets, records, numPages };
+    } else {
+      return await this.prisma.pet.findMany();
+    }
   }
   async getById(id: number): Promise<TPet> {
     const pet = await this.findById<TPet>(id);

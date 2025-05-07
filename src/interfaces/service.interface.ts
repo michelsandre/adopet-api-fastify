@@ -1,5 +1,5 @@
 export abstract class IService {
-  abstract getAll(all?: boolean): Promise<object[]>;
+  abstract getAll(page?: number): Promise<object[] | object>;
 
   abstract getById(id: number | string): Promise<object>;
 

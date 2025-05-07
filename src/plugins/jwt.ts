@@ -7,7 +7,7 @@ import { CustomError } from '../shared/custom-error';
 
 export default fp(async (fastify) => {
   fastify.register(fastifyJwt, {
-    secret: 'super-secreto',
+    secret: fastify.config.JWT_SECRET,
   });
 
   fastify.decorate('authenticate', async (req: FastifyRequest, reply: FastifyReply) => {
