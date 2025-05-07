@@ -2,7 +2,7 @@ import { PrismaClient } from '../generated/prisma';
 import { TutorCreateSchema } from '../src/routes/tutores/schemas/tutor-create-schema';
 import { hashPassword } from '../src/utils/hash-password';
 import { AbrigoCreateSchema } from '../src/routes/abrigos/schemas/abrigo-create-schema';
-import { PetCreateSchema } from '../src/routes/pets/schemas/pet-create-schema';
+import { PetCreateSeedSchema } from '../src/routes/pets/schemas/pet-create-seed-schema';
 
 const prisma = new PrismaClient();
 
@@ -88,6 +88,8 @@ async function main() {
       idade: '3 anos',
       endereco: 'Rua dos Animais, 123 - São Paulo',
       imagem: 'https://picsum.photos/200/300',
+      tamanho: 'medio',
+      abrigoId: 1,
     },
     {
       nome: 'Mia',
@@ -95,6 +97,8 @@ async function main() {
       idade: '2 anos',
       endereco: 'Avenida Pet Lovers, 456 - Rio de Janeiro',
       imagem: 'https://picsum.photos/200/300',
+      tamanho: 'pequeno',
+      abrigoId: 2,
     },
     {
       nome: 'Thor',
@@ -102,6 +106,8 @@ async function main() {
       idade: '4 anos',
       endereco: 'Praça dos Bichos, 789 - Belo Horizonte',
       imagem: 'https://picsum.photos/200/300',
+      tamanho: 'grande',
+      abrigoId: 3,
     },
     {
       nome: 'Luna',
@@ -109,6 +115,8 @@ async function main() {
       idade: '1 ano',
       endereco: 'Alameda dos Pets, 101 - Curitiba',
       imagem: 'https://picsum.photos/200/300',
+      tamanho: 'medio_grande',
+      abrigoId: 4,
     },
     {
       nome: 'Max',
@@ -116,12 +124,59 @@ async function main() {
       idade: '5 meses',
       endereco: 'Estrada dos Amigos, 202 - Porto Alegre',
       imagem: 'https://picsum.photos/200/300',
+      tamanho: 'pequeno',
+      abrigoId: 5,
+    },
+    {
+      nome: 'Bella',
+      descricao: 'Amorosa e brincalhona',
+      idade: '2 anos',
+      endereco: 'Rua Felicidade, 303 - Salvador',
+      imagem: 'https://picsum.photos/200/300',
+      tamanho: 'medio',
+      abrigoId: 1,
+    },
+    {
+      nome: 'Charlie',
+      descricao: 'Inteligente e energético',
+      idade: '3 anos',
+      endereco: 'Avenida dos Animais, 404 - Recife',
+      imagem: 'https://picsum.photos/200/300',
+      tamanho: 'grande',
+      abrigoId: 2,
+    },
+    {
+      nome: 'Daisy',
+      descricao: 'Doce e sociável',
+      idade: '1 ano e meio',
+      endereco: 'Praça Pet Friendly, 505 - Florianópolis',
+      imagem: 'https://picsum.photos/200/300',
+      tamanho: 'pequeno',
+      abrigoId: 3,
+    },
+    {
+      nome: 'Rocky',
+      descricao: 'Forte e protetor',
+      idade: '5 anos',
+      endereco: 'Rua dos Guardiões, 606 - Fortaleza',
+      imagem: 'https://picsum.photos/200/300',
+      tamanho: 'grande',
+      abrigoId: 4,
+    },
+    {
+      nome: 'Lola',
+      descricao: 'Alegre e cheia de energia',
+      idade: '6 meses',
+      endereco: 'Alameda dos Filhotes, 707 - Manaus',
+      imagem: 'https://picsum.photos/200/300',
+      tamanho: 'medio_grande',
+      abrigoId: 5,
     },
   ];
 
   // Validar os dados com PetCreateSchema
   for (const pet of pets) {
-    const validatedPet = PetCreateSchema.parse(pet); // Valida os dados
+    const validatedPet = PetCreateSeedSchema.parse(pet); // Valida os dados
     await prisma.pet.create({ data: validatedPet }); // Insere no banco
   }
 }

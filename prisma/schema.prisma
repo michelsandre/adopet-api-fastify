@@ -26,10 +26,11 @@ model Pet {
   id        Int     @id @default(autoincrement())
   nome      String
   descricao String
-  adotado   Boolean @default(false)
+  tamanho   Tamanho
   idade     String
   endereco  String
   imagem    String
+  adotado   Boolean @default(false)
   adocao    Adocao?
   abrigo    Abrigo? @relation(fields: [abrigoId], references: [id])
   abrigoId  Int?
@@ -48,4 +49,11 @@ model Adocao {
   petId   Int      @unique
   tutor   Tutor    @relation(fields: [tutorId], references: [id])
   tutorId Int
+}
+
+enum Tamanho {
+  pequeno
+  medio
+  medio_grande
+  grande
 }

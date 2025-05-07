@@ -22,11 +22,12 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     {
       schema: {
         summary: 'Pesquisar todos os pets disponíveis',
-        description: 'Pesquisa de pets não adotados e cadastrados em algum abrigo',
+        description:
+          'Pesquisa de pets não adotados e cadastrados em algum abrigo',
         tags: routeTag,
-        // response: {
-        //   200: PetSchema.array(),
-        // },
+        response: {
+          200: PetSchema.array(),
+        },
       },
     },
     async (req, reply) => {
@@ -124,7 +125,10 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
       },
       preHandler: [fastify.authRole(RolesEnum.ABRIGO)],
     },
-    async (req: FastifyRequest<{ Params: { petId: string; abrigoId: string } }>, reply) => {
+    async (
+      req: FastifyRequest<{ Params: { petId: string; abrigoId: string } }>,
+      reply
+    ) => {
       await petController.createRelation(req, reply);
     }
   );
