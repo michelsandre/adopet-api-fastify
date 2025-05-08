@@ -21,15 +21,27 @@ Siga os passos abaixo para configurar o projeto localmente:
    npm install
    ```
 
-3. Configure o banco de dados:
+3. Configure as variáveis de ambiente:
 
    Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
 
    ```bash
-   PORT=8080
-   DATABASE_URL="file:./db/dev.db"
-   JWT_SECRET="sua-chave-secreta"
-   EXPIRES_IN='10m'
+      # Exemplo de configurações
+
+      # Define a porta que o servidor deverá inicializar (opcional)
+      PORT=8080
+
+      # Define o endereço do banco de dados, no caso será SQLite. Se não existir, será criado.
+      # Leia a documentação do prisma para outros banco de dados:
+      # https://www.prisma.io/docs/orm/overview/databases
+      DATABASE_URL="file:./db/dev.db"
+
+      # Chave secreta para geração e validação do token
+      # Pode ser gerada através https://randomkeygen.com/
+      JWT_SECRET="sua-chave-secreta"
+
+      # Define a validade do token. Ex: '10m' - 10 minutos.
+      EXPIRES_IN='10m'
    ```
 
 4. Execute as migrações do Prisma para criar o banco de dados:
@@ -81,6 +93,21 @@ Executa os testes da aplicação.
 - **Zod**: Validação de esquemas de dados.
 - **TypeScript**: Tipagem estática para JavaScript.
 - **JWT**: Autenticação baseada em tokens.
+
+## 🔶 Configurações banco de dados
+
+Para configurar um banco de dados diferente do **sqlite**, verificar o arquivo `/prisma/schema.prisma`:
+
+```bash
+   datasource db {
+      # alterar o tipo do provider abaixo para o banco desejado, postgresql por exemplo
+      provider = "sqlite"
+
+      # endereço do banco de dados no arquivo .env
+      #postgresql://user:senha@host:port/nome_banco_dados"
+      url      = env("DATABASE_URL")
+   }
+```
 
 ## 🌐 Endpoints
 
@@ -139,21 +166,6 @@ adopet-api-fastify/
 ├── package.json         # Configurações do projeto e dependências
 ├── tsconfig.json        # Configuração do TypeScript
 ├── README.md            # Documentação do projeto
-```
-
-Exemplo para o arquivo `.env`
-
-```bash
-# Define a porta que o servidor deverá inicializar
-PORT=8080
-# Define o endereço do banco de dados, no caso será SQLite. Se não existir, será criado.
-DATABASE_URL="file:./db/dev.db"
-# Chave secreta para geração e validação do token
-# Pode ser gerada através https://randomkeygen.com/
-JWT_SECRET="sua-chave-secreta"
-# Define a validade do token
-EXPIRES_IN='10m'
-
 ```
 
 ## 🧪 Testes de Requisição
