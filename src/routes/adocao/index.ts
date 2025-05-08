@@ -36,8 +36,13 @@ const adocao: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
       schema: {
         summary: 'Criar registro de adoçao',
         description:
-          'Ao finalizar o registro, o pet informado mudará o status `adotado: true`. O pet pode conter apenas 1 registro de adoção.',
+          'Ao finalizar o registro, o pet informado mudará o status `adotado: true`. O pet pode conter apenas 1 registro de adoção. Apenas os abrigos podem executar esta função',
         tags: routeTag,
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
         params: z.object({
           tutorId: ParamIdSchema.shape.id,
           petId: ParamIdSchema.shape.id,
@@ -46,6 +51,7 @@ const adocao: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
           201: AdocaoSchema.omit({ pet: true }),
         },
       },
+      preHandler: [fastify.authRole(RolesEnum.ABRIGO)],
     },
     async (req: FastifyRequest<{ Params: { tutorId: string; petId: string } }>, reply) => {
       await adocaoController.createAdocao(req, reply);

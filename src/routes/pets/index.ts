@@ -62,12 +62,19 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     {
       schema: {
         summary: 'Criar registro',
+        description: 'Apenas os abrigos podem cadastrar um pet',
         tags: routeTag,
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
         body: PetCreateSchema,
         response: {
           201: PetSchema,
         },
       },
+      preHandler: [fastify.authRole(RolesEnum.ABRIGO)],
     },
     async (req, reply) => {
       await petController.create(req, reply);
@@ -79,13 +86,20 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     {
       schema: {
         summary: 'Editar registro',
+        description: 'Apenas os abrigos podem cadastrar um pet',
         tags: routeTag,
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
         params: ParamIdSchema,
         body: PetUpdateSchema,
         response: {
           200: PetSchema,
         },
       },
+      preHandler: [fastify.authRole(RolesEnum.ABRIGO)],
     },
     async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
       await petController.update(req, reply);
@@ -123,8 +137,14 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
     '/:id',
     {
       schema: {
-        tags: routeTag,
         summary: 'Apagar registro',
+        description: 'Apenas os abrigos podem executar esta função',
+        tags: routeTag,
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
         params: ParamIdSchema,
         response: {
           200: z.object({
@@ -132,6 +152,7 @@ const pets: FastifyPluginAsyncZod = async (fastify, opts): Promise<void> => {
           }),
         },
       },
+      preHandler: [fastify.authRole(RolesEnum.ABRIGO)],
     },
     async (req: FastifyRequest<{ Params: { id: string } }>, reply) => {
       await petController.delete(req, reply);
